@@ -2,11 +2,11 @@
 const mongoose    = require('mongoose');
 
 // import helpers
-const { required, unique, validateEmail } = require('../utils/model');
+const { required, validateEmail } = require('../utils/model');
 
 const { Schema } = mongoose;
 
-const UserSchema = new Schema({
+const userSchema = new Schema({
   id: { type: String },
   firstName: { type: String, required: required('First name'), trim: true },
   lastName: { type: String, trim: true, default: "" },
@@ -33,7 +33,7 @@ const UserSchema = new Schema({
 /**
  * Pre hooks
  */
-UserSchema.pre('save', function preSave() {
+userSchema.pre('save', function preSave() {
   const user = this;
   user.id = user._id.toString();
 });
@@ -41,7 +41,7 @@ UserSchema.pre('save', function preSave() {
 /**
  * Post hooks
  */
-UserSchema.post('save', function(error, doc, next) {
+userSchema.post('save', function(error, doc, next) {
   if (error.name === 'MongoError' && error.code === 11000) {
     next(new Error('You are already registered, Please try to login with your password'));
   } else {
@@ -50,10 +50,10 @@ UserSchema.post('save', function(error, doc, next) {
 });
 
 // index
-UserSchema.index({ "email.address": 1 }, {
+userSchema.index({ "email.address": 1 }, {
   unique: true,
 });
 
-const Users   = mongoose.model('Users', UserSchema);
+const Users   = mongoose.model('Users', userSchema);
 
 module.exports = Users;

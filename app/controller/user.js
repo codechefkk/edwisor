@@ -1,5 +1,5 @@
 // import collections
-const { Users } = require('../models');
+const { Users, UserToken } = require('../models');
 
 // import helpers
 const baseHelper = require('../utils/base');
@@ -118,7 +118,9 @@ class UserController {
 
       const tokenData = baseHelper.getTokenData(user);
 
-      return baseHelper.response(res, baseHelper.success(true));
+      const { token } = await UserToken.create(tokenData);
+
+      return baseHelper.response(res, baseHelper.success(token));
     } catch (err) {
       baseHelper.warn(err.message);
       return baseHelper.response(res, baseHelper.error(err.message), 422);

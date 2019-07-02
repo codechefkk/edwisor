@@ -34,8 +34,9 @@ class BaseHelper {
    */
   generateToken(user) {
     const token  = jwt.sign({
-      email: user.email.address, _id  : user.id,
-    }, this.encryptionKey);
+      email: user.email.address,
+      _id: user.id,
+    }, "edwisor");
     return token;
   }
 
